@@ -236,10 +236,9 @@ class Tetris {
                 return Err;
             };
 
-            const bool is_I = std::any_of(
-                this->block.begin(), this->block.end(), [](const auto &row) {
-                    return std::find(row.begin(), row.end(), MinoKind::I) !=
-                           row.end();
+            const bool is_I =
+                std::ranges::any_of(this->block, [](const auto &row) {
+                    return std::ranges::find(row, MinoKind::I) != row.end();
                 });
 
             for (int i = 1; i <= (is_I ? 2 : 1); ++i) {

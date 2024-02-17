@@ -38,7 +38,7 @@ std::mt19937 &get_random_generator() {
 
 const auto &randomize_order() {
     static std::array<int, 7> order{0, 1, 2, 3, 4, 5, 6};
-    std::shuffle(order.begin(), order.end(), get_random_generator());
+    std::ranges::shuffle(order, get_random_generator());
     return order;
 }
 
