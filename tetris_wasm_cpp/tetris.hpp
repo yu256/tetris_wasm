@@ -54,6 +54,7 @@ class Tetris {
     // 自由落下固定キャンセルが発生したらスーパーローテーションさせない（登ることができるので）
     bool canceled;
 
+  public:
     explicit Tetris()
         : field{{
               {0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0},
@@ -92,7 +93,10 @@ class Tetris {
         }
     }
 
+  private:
     // ↓ static function
+
+    static inline bool is_err(const Result result) { return !result; }
 
     static void write_block(Field &field, const Position &pos,
                             const MinoShape &block, const bool is_view) {
@@ -116,16 +120,24 @@ class Tetris {
 
     static bool is_collision(const Field &field, const Position &pos,
                              const MinoShape &block) {
-        return any_of(block, [&](const auto &row) {
-            return any_of(row, [&](const int cell) {
-                return cell && field[pos.y][pos.x];
-            });
-        });
+        for (int y = 0; y < std::min(FIELD_HEIGHT - pos.y, 4); ++y) {
+            for (int x = 0; x < std::min(FIELD_WIDTH - pos.x, 4); ++x) {
+                if (field[y + pos.y][x + pos.x] && block[y][x])
+                    return true;
+            }
+        }
+        return false;
     }
 
-    static inline bool is_err(const Result result) { return !result; }
-
     // ↑ static function
+
+    bool is_collision(const MinoShape &new_shape) const {
+        return is_collision(this->field, this->pos, new_shape);
+    }
+
+    bool is_collision(const Position &new_pos) const {
+        return is_collision(this->field, new_pos, this->block);
+    }
 
     int to_score(const int prev) const {
         switch (this->erased_cnt - prev) {
@@ -140,14 +152,6 @@ class Tetris {
         default:
             return 1200;
         }
-    }
-
-    bool is_collision(const MinoShape &new_shape) const {
-        return is_collision(this->field, this->pos, new_shape);
-    }
-
-    bool is_collision(const Position &new_pos) const {
-        return is_collision(this->field, new_pos, this->block);
     }
 
     Field get_current_state() const {
