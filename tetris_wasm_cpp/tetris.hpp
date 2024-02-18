@@ -1,8 +1,16 @@
 #ifndef tetris_hpp
 #define tetris_hpp
 
-#include "includes.hpp"
 #include "rand.hpp"
+#include <algorithm>
+#include <array>
+#include <expected>
+#include <memory>
+#include <optional>
+#include <queue>
+#include <ranges>
+
+using std::ranges::any_of, std::ranges::find;
 
 constexpr int FIELD_WIDTH = 11 + 2 + 2;
 constexpr int FIELD_HEIGHT = 20 + 1 + 1;
@@ -94,13 +102,11 @@ class Tetris {
 
     static bool is_collision(const Field &field, const Position &pos,
                              const MinoShape &block) {
-        for (int y = 0; y < (FIELD_HEIGHT - pos.y) && y < 4; ++y) {
-            for (int x = 0; x < (FIELD_WIDTH - pos.x) && x < 4; ++x) {
-                if (field[y + pos.y][x + pos.x] && block[y][x])
-                    return true;
-            }
-        }
-        return false;
+        return any_of(block, [&](const auto &row) {
+            return any_of(row, [&](const int cell) {
+                return cell && field[pos.y][pos.x];
+            });
+        });
     }
 
   public:
@@ -236,10 +242,9 @@ class Tetris {
                 return Err;
             };
 
-            const bool is_I =
-                std::ranges::any_of(this->block, [](const auto &row) {
-                    return std::ranges::find(row, MinoKind::I) != row.end();
-                });
+            const bool is_I = any_of(this->block, [](const auto &row) {
+                return find(row, MinoKind::I) != row.end();
+            });
 
             for (int i = 1; i <= (is_I ? 2 : 1); ++i) {
                 if (super_rotate(i) == Ok)

@@ -3,6 +3,8 @@
 
 #include "tetris.hpp"
 #include <algorithm>
+#include <array>
+#include <queue>
 #include <random>
 
 using MinoShape = std::array<std::array<int, 4>, 4>;
