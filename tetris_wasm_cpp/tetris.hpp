@@ -19,17 +19,9 @@ constexpr int NEXT_BLOCK_LENGTH = 8;
 
 class Tetris {
   public:
-    struct Position {
-        int x;
-        int y;
-    };
-
-    enum Result { Err, Ok };
-
-    enum class Direction { Right, Left };
-
     using Field = std::array<std::array<int, FIELD_WIDTH>, FIELD_HEIGHT>;
 
+    // JavaScript側に返す構造体
     struct ReturnType {
         Field field;
         std::deque<MinoShape> next_blocks;
@@ -39,6 +31,15 @@ class Tetris {
     };
 
   private:
+    struct Position {
+        int x;
+        int y;
+    };
+
+    enum Result { Err, Ok };
+
+    enum class Direction { Right, Left };
+
     Field field;
     Position pos;
     MinoShape block;
@@ -53,63 +54,6 @@ class Tetris {
     // 自由落下固定キャンセルが発生したらスーパーローテーションさせない（登ることができるので）
     bool canceled;
 
-    enum class ExecType {
-        Init,
-        FreeFall,
-        RotateRight,
-        RotateLeft,
-        MoveRight,
-        MoveLeft,
-        HardDrop,
-        SoftDrop,
-        Hold,
-    };
-
-    int to_score(const int prev) const {
-        switch (this->erased_cnt - prev) {
-        case 0:
-            return 0;
-        case 1:
-            return 40;
-        case 2:
-            return 100;
-        case 3:
-            return 300;
-        default:
-            return 1200;
-        }
-    }
-
-    static void write_block(Field &field, const Position &pos,
-                            const MinoShape &block, const bool is_view) {
-        auto ghost_pos_y = pos.y;
-
-        while (!is_collision(field, {pos.x, ghost_pos_y + 1}, block)) {
-            ghost_pos_y += 1;
-        };
-
-        for (int y = 0; y < 4; ++y) {
-            for (int x = 0; x < 4; ++x) {
-                if (!block[y][x])
-                    continue;
-                const auto sum_x = x + pos.x;
-                if (is_view)
-                    field[y + ghost_pos_y][sum_x] = MinoKind::Ghost;
-                field[y + pos.y][sum_x] = block[y][x];
-            }
-        }
-    }
-
-    static bool is_collision(const Field &field, const Position &pos,
-                             const MinoShape &block) {
-        return any_of(block, [&](const auto &row) {
-            return any_of(row, [&](const int cell) {
-                return cell && field[pos.y][pos.x];
-            });
-        });
-    }
-
-  public:
     explicit Tetris()
         : field{{
               {0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0},
@@ -148,11 +92,54 @@ class Tetris {
         }
     }
 
-    void advance_block_queue() {
-        if (this->block_queue.empty())
-            init_block_queue(this->block_queue);
-        this->next_blocks.push_back(this->block_queue.front());
-        this->block_queue.pop();
+    // ↓ static function
+
+    static void write_block(Field &field, const Position &pos,
+                            const MinoShape &block, const bool is_view) {
+        auto ghost_pos_y = pos.y;
+
+        while (!is_collision(field, {pos.x, ghost_pos_y + 1}, block)) {
+            ghost_pos_y += 1;
+        };
+
+        for (int y = 0; y < 4; ++y) {
+            for (int x = 0; x < 4; ++x) {
+                if (!block[y][x])
+                    continue;
+                const auto sum_x = x + pos.x;
+                if (is_view)
+                    field[y + ghost_pos_y][sum_x] = MinoKind::Ghost;
+                field[y + pos.y][sum_x] = block[y][x];
+            }
+        }
+    }
+
+    static bool is_collision(const Field &field, const Position &pos,
+                             const MinoShape &block) {
+        return any_of(block, [&](const auto &row) {
+            return any_of(row, [&](const int cell) {
+                return cell && field[pos.y][pos.x];
+            });
+        });
+    }
+
+    static inline bool is_err(const Result result) { return !result; }
+
+    // ↑ static function
+
+    int to_score(const int prev) const {
+        switch (this->erased_cnt - prev) {
+        case 0:
+            return 0;
+        case 1:
+            return 40;
+        case 2:
+            return 100;
+        case 3:
+            return 300;
+        default:
+            return 1200;
+        }
     }
 
     bool is_collision(const MinoShape &new_shape) const {
@@ -161,6 +148,28 @@ class Tetris {
 
     bool is_collision(const Position &new_pos) const {
         return is_collision(this->field, new_pos, this->block);
+    }
+
+    Field get_current_state() const {
+        auto copied_field = this->field;
+
+        write_block(copied_field, this->pos, this->block, true);
+
+        return copied_field;
+    }
+
+    Position new_pos(const int x, const int y) const {
+        return {this->pos.x + x, this->pos.y + y};
+    }
+
+    // ↑ read-only
+    // ↓ destructive
+
+    void advance_block_queue() {
+        if (this->block_queue.empty())
+            init_block_queue(this->block_queue);
+        this->next_blocks.push_back(this->block_queue.front());
+        this->block_queue.pop();
     }
 
     Result move(const Position &new_pos) {
@@ -296,8 +305,13 @@ class Tetris {
         this->is_holded = true;
     }
 
+  public:
+    // JavaScriptから呼ぶ
     std::optional<ReturnType> exec(const int type,
                                    const std::optional<unsigned long> time) {
+        if (this->is_finished)
+            return std::nullopt;
+
         const bool is_moving =
             time.transform([this](const auto &time) {
                     const auto is_moving =
@@ -307,12 +321,21 @@ class Tetris {
                 })
                 .value_or(false);
 
-        if (this->is_finished)
-            return std::nullopt;
+        enum ExecType {
+            Init,
+            FreeFall,
+            RotateRight,
+            RotateLeft,
+            MoveRight,
+            MoveLeft,
+            HardDrop,
+            SoftDrop,
+            Hold,
+        };
 
-        switch (static_cast<ExecType>(type)) {
-        case ExecType::SoftDrop:
-        case ExecType::FreeFall: {
+        switch (type) {
+        case SoftDrop:
+        case FreeFall: {
             const auto result = this->drop(is_moving);
             if (!result.has_value())
                 return ReturnType{result.error()->get_current_state(),
@@ -321,23 +344,23 @@ class Tetris {
             break;
         }
 
-        case ExecType::RotateRight:
+        case RotateRight:
             this->rotate(Direction::Right);
             break;
 
-        case ExecType::RotateLeft:
+        case RotateLeft:
             this->rotate(Direction::Left);
             break;
 
-        case ExecType::MoveRight:
+        case MoveRight:
             this->move(this->new_pos(1, 0));
             break;
 
-        case ExecType::MoveLeft:
+        case MoveLeft:
             this->move(this->new_pos(-1, 0));
             break;
 
-        case ExecType::HardDrop:
+        case HardDrop:
             for (;;) {
                 const auto result = this->drop();
                 if (!result.has_value())
@@ -348,29 +371,14 @@ class Tetris {
                     break;
             }
             break;
-        case ExecType::Hold:
+        case Hold:
             this->hold_mino();
             break;
-        default:;
         }
 
         return ReturnType{this->get_current_state(), this->next_blocks,
                           this->hold, this->score, this->erased_cnt};
     }
-
-    Field get_current_state() const {
-        auto copied_field = this->field;
-
-        write_block(copied_field, this->pos, this->block, true);
-
-        return copied_field;
-    }
-
-    Position new_pos(const int x, const int y) const {
-        return {this->pos.x + x, this->pos.y + y};
-    }
-
-    static inline bool is_err(const Result result) { return !result; }
 };
 
 #endif
