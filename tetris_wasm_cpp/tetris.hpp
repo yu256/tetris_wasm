@@ -24,7 +24,7 @@ class Tetris {
     // JavaScript側に返す構造体
     struct ReturnType {
         Field field;
-        std::deque<MinoShape> next_blocks;
+        std::shared_ptr<std::deque<MinoShape>> next_blocks;
         std::optional<MinoShape> hold;
         int score;
         int erased_cnt;
@@ -46,7 +46,7 @@ class Tetris {
     bool is_finished;
     std::optional<MinoShape> hold;
     bool is_holded;
-    std::deque<MinoShape> next_blocks;
+    std::shared_ptr<std::deque<MinoShape>> next_blocks;
     int score;
     std::queue<MinoShape> block_queue;
     int erased_cnt;
@@ -80,16 +80,16 @@ class Tetris {
               {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
               {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
           }},
-          pos{5, 0}, block{}, is_finished{false}, hold{std::nullopt},
-          is_holded{false}, next_blocks{}, score{0}, block_queue{},
-          erased_cnt{0}, last_operated_time{0}, canceled{false} {
-        rand::init_block_queue(this->block_queue);
+          pos{5, 0}, block{}, is_finished{false}, hold{}, is_holded{false},
+          next_blocks{}, score{0}, block_queue{}, erased_cnt{0},
+          last_operated_time{0}, canceled{false} {
+        rand_gen::init_block_queue(this->block_queue);
 
         this->block = this->block_queue.front();
         this->block_queue.pop();
 
         for (int i = 0; i < NEXT_BLOCK_LENGTH; ++i) {
-            advance_block_queue();
+            this->advance_block_queue();
         }
     }
 
@@ -172,8 +172,8 @@ class Tetris {
 
     void advance_block_queue() {
         if (this->block_queue.empty())
-            rand::init_block_queue(this->block_queue);
-        this->next_blocks.push_back(this->block_queue.front());
+            rand_gen::init_block_queue(this->block_queue);
+        this->next_blocks->push_back(this->block_queue.front());
         this->block_queue.pop();
     }
 
@@ -192,8 +192,8 @@ class Tetris {
     Result spawn_block() {
         const Position new_pos{5, 0};
         this->pos = new_pos;
-        this->block = next_blocks.front();
-        this->next_blocks.pop_front();
+        this->block = next_blocks->front();
+        this->next_blocks->pop_front();
         this->advance_block_queue();
         return static_cast<Result>(!this->is_collision(new_pos));
     }

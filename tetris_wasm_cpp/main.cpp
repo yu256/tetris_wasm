@@ -5,19 +5,27 @@
 
 using std::deque;
 
-struct DequeAccess {
-    static std::optional<deque<MinoShape>::value_type>
-    get(const deque<MinoShape> &d, const deque<MinoShape>::size_type index) {
-        if (index < d.size()) {
-            return d[index];
-        } else {
-            return std::nullopt;
-        }
-    }
+// struct DequeAccess {
+//     static std::optional<deque<MinoShape>::value_type>
+//     get(const deque<MinoShape> &d, const deque<MinoShape>::size_type index) {
+//         if (index < d.size()) {
+//             return d[index];
+//         } else {
+//             return std::nullopt;
+//         }
+//     }
+//     static deque<MinoShape>::value_type
+//     get_unchecked(const deque<MinoShape> &d,
+//                   const deque<MinoShape>::size_type index) {
+//         return d[index];
+//     }
+// };
+
+struct SharedPtrAccess {
     static deque<MinoShape>::value_type
-    get_unchecked(const deque<MinoShape> &d,
+    get_unchecked(const std::shared_ptr<std::deque<MinoShape>> &ptr,
                   const deque<MinoShape>::size_type index) {
-        return d[index];
+        return ptr->at(index);
     }
 };
 
@@ -68,10 +76,12 @@ EMSCRIPTEN_BINDINGS(tetris) {
 
     emscripten::register_optional<MinoShape>();
 
-    emscripten::class_<std::deque<MinoShape>>("NextBlocks")
-        .constructor()
-        .function("get", &DequeAccess::get)
-        .function("get_unchecked", &DequeAccess::get_unchecked);
+    // emscripten::class_<std::deque<MinoShape>>("NextBlocks")
+    //     .function("get", &DequeAccess::get)
+    //     .function("get_unchecked", &DequeAccess::get_unchecked);
+
+    emscripten::class_<std::shared_ptr<std::deque<MinoShape>>>("NextBlocksPtr")
+        .function("get_unchecked", &SharedPtrAccess::get_unchecked);
 
     emscripten::value_array<std::array<int, 4>>("MinoShape_X")
         .element(emscripten::index<0>())

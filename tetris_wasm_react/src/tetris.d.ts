@@ -7,14 +7,20 @@ export interface Tetris {
 type MinoShapeX = [number, number, number, number];
 export type MinoShape = [MinoShapeX, MinoShapeX, MinoShapeX, MinoShapeX];
 
-interface NextBlocks {
-	get: (index: number) => MinoShape;
+interface NextBlocksPtr {
+	// get: (index: number) => MinoShape;
 	get_unchecked: (index: number) => MinoShape;
 }
 
 export type Hold = MinoShape | undefined;
 
-export type TetrisData = [TetrisArr, Hold, NextBlocks, number, number];
+export type TetrisData = [
+	TetrisArr,
+	Hold,
+	NextBlocksPtr,
+	number,
+	number,
+];
 
 type TetrisX = [
 	number,
