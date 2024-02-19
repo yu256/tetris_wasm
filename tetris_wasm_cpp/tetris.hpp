@@ -83,7 +83,7 @@ class Tetris {
           pos{5, 0}, block{}, is_finished{false}, hold{std::nullopt},
           is_holded{false}, next_blocks{}, score{0}, block_queue{},
           erased_cnt{0}, last_operated_time{0}, canceled{false} {
-        init_block_queue(this->block_queue);
+        rand::init_block_queue(this->block_queue);
 
         this->block = this->block_queue.front();
         this->block_queue.pop();
@@ -98,17 +98,33 @@ class Tetris {
 
     static inline bool is_err(const Result result) { return !result; }
 
+    static int to_score(const int line_cnt) {
+        switch (line_cnt) {
+        case 0:
+            return 0;
+        case 1:
+            return 40;
+        case 2:
+            return 100;
+        case 3:
+            return 300;
+        default:
+            return 1200;
+        }
+    }
+
     static void write_block(Field &field, const Position &pos,
-                            const MinoShape &block, const bool is_view) {
+                            const MinoShape &block,
+                            const bool is_view = false) {
         auto ghost_pos_y = pos.y;
 
-        while (!is_collision(field, {pos.x, ghost_pos_y + 1}, block)) {
+        while (!Tetris::is_collision(field, {pos.x, ghost_pos_y + 1}, block)) {
             ghost_pos_y += 1;
         };
 
         for (int y = 0; y < 4; ++y) {
             for (int x = 0; x < 4; ++x) {
-                if (!block[y][x])
+                if (block[y][x] == MinoKind::None)
                     continue;
                 const auto sum_x = x + pos.x;
                 if (is_view)
@@ -132,32 +148,17 @@ class Tetris {
     // ↑ static function
 
     bool is_collision(const MinoShape &new_shape) const {
-        return is_collision(this->field, this->pos, new_shape);
+        return this->is_collision(this->field, this->pos, new_shape);
     }
 
     bool is_collision(const Position &new_pos) const {
-        return is_collision(this->field, new_pos, this->block);
-    }
-
-    int to_score(const int prev) const {
-        switch (this->erased_cnt - prev) {
-        case 0:
-            return 0;
-        case 1:
-            return 40;
-        case 2:
-            return 100;
-        case 3:
-            return 300;
-        default:
-            return 1200;
-        }
+        return this->is_collision(this->field, new_pos, this->block);
     }
 
     Field get_current_state() const {
         auto copied_field = this->field;
 
-        write_block(copied_field, this->pos, this->block, true);
+        this->write_block(copied_field, this->pos, this->block, true);
 
         return copied_field;
     }
@@ -171,7 +172,7 @@ class Tetris {
 
     void advance_block_queue() {
         if (this->block_queue.empty())
-            init_block_queue(this->block_queue);
+            rand::init_block_queue(this->block_queue);
         this->next_blocks.push_back(this->block_queue.front());
         this->block_queue.pop();
     }
@@ -185,7 +186,7 @@ class Tetris {
     }
 
     void lock_block() {
-        write_block(this->field, this->pos, this->block, false);
+        this->write_block(this->field, this->pos, this->block);
     }
 
     Result spawn_block() {
@@ -193,7 +194,7 @@ class Tetris {
         this->pos = new_pos;
         this->block = next_blocks.front();
         this->next_blocks.pop_front();
-        advance_block_queue();
+        this->advance_block_queue();
         return static_cast<Result>(!this->is_collision(new_pos));
     }
 
@@ -217,7 +218,7 @@ class Tetris {
         CONTINUE_OUTER:
         }
 
-        this->score += this->to_score(cnt);
+        this->score += this->to_score(this->erased_cnt - cnt);
     }
 
     void rotate(const Direction direction) {
@@ -246,7 +247,7 @@ class Tetris {
                      {pos.x - diff, pos.y}}};
 
                 for (const auto &pos_ : super_rotation_pos) {
-                    if (!is_collision(this->field, pos_, new_shape)) {
+                    if (!this->is_collision(this->field, pos_, new_shape)) {
                         this->pos = pos_;
                         this->block = new_shape;
                         return Ok;

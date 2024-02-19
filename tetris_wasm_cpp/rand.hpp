@@ -32,6 +32,8 @@ static constexpr std::array<MinoShape, 7> TETRIMINOS = {{
     {{{0, 0, 0, 0}, {0, T, 0, 0}, {T, T, T, 0}, {0, 0, 0, 0}}},
 }};
 
+namespace rand {
+
 std::mt19937 &get_random_generator() {
     static std::random_device rd;
     static std::mt19937 gen(rd());
@@ -49,5 +51,7 @@ inline void init_block_queue(std::queue<MinoShape> &queue) {
         queue.push(TETRIMINOS[num]);
     }
 }
+
+} // namespace rand
 
 #endif
