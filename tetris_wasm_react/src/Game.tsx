@@ -6,10 +6,9 @@ import { ExecType } from "./enums";
 
 type Props = {
 	tetrisClass: new () => Tetris;
-	nextBlocksIndexes: number[];
 };
 
-export default function Game({ tetrisClass, nextBlocksIndexes }: Props) {
+export default function Game({ tetrisClass }: Props) {
 	const [tetris, setTetris] = useState(() => new tetrisClass());
 	const [
 		[tetrisArr, hold, nextBlocks, score, erasedlineCount],
@@ -47,7 +46,7 @@ export default function Game({ tetrisClass, nextBlocksIndexes }: Props) {
 
 	return (
 		<button
-			className="m-10 bg-gray-500"
+			className="m-10 bg-gray-500 border-4 rounded border-amber-300"
 			type="button"
 			// biome-ignore lint/a11y/noAutofocus:
 			autoFocus
@@ -66,22 +65,24 @@ export default function Game({ tetrisClass, nextBlocksIndexes }: Props) {
 			<div>
 				スコア: {score} レベル: {level} 消したライン数: {erasedlineCount}
 			</div>
-			<div className="grid grid-cols-5 gap-2">
+			<div className="grid grid-cols-4 gap-2">
 				<Field
-					className="bg-white m-2 rounded w-max h-max col-span-2"
+					className="bg-white rounded w-max h-max m-2 col-span-3"
 					currentState={tetrisArr}
 				/>
-				<div className="col-span-2">
-					<div className="m-2">Next</div>
-					<span className="grid grid-cols-2 gap-3">
-						{nextBlocksIndexes.map((i) => (
-							<Field key={i} currentState={nextBlocks.get_unchecked(i)} />
-						))}
-					</span>
-				</div>
-				<div>
-					<div className="m-2">Hold</div>
-					<Field currentState={hold} />
+				<div className="grid grid-cols-1">
+					<div className="w-min h-min">
+						<div className="m-2">Next</div>
+						<span className="grid gap-2">
+							{[0, 1, 2].map((i) => (
+								<Field key={i} currentState={nextBlocks.get_unchecked(i)} />
+							))}
+						</span>
+					</div>
+					<div className="w-min h-min">
+						<div className="m-2">Hold</div>
+						<Field currentState={hold} />
+					</div>
 				</div>
 			</div>
 		</button>

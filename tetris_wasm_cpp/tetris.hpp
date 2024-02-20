@@ -15,7 +15,7 @@ using std::ranges::any_of, std::ranges::find;
 constexpr int FIELD_WIDTH = 11 + 2 + 2;
 constexpr int FIELD_HEIGHT = 20 + 1 + 1;
 
-constexpr int NEXT_BLOCK_LENGTH = 8;
+constexpr int NEXT_BLOCK_LENGTH = 3;
 
 class Tetris {
   public:
@@ -321,7 +321,7 @@ class Tetris {
             time.transform([this](const auto &time) {
                     const auto is_moving =
                         time - this->last_operated_time < 150;
-                    this->last_operated_time = time;
+                    this->last_operated_time = time; // effect
                     return is_moving;
                 })
                 .value_or(false);

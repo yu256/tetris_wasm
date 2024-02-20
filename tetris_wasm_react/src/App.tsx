@@ -2,7 +2,7 @@ import { useState } from "react";
 import Game from "./Game";
 import Module, { type MainModule } from "./tetris";
 
-const StartScreen = ({ onClick }: React.DOMAttributes<HTMLButtonElement>) => (
+const StartScreen = ({ onClick }: React.ComponentProps<"button">) => (
 	<button type="button" onClick={onClick}>
 		Play
 	</button>
@@ -22,10 +22,7 @@ export default function App() {
 
 	return isPushedPlay ? (
 		<div>
-			<Game
-				tetrisClass={module.Tetris}
-				nextBlocksIndexes={Array.from(Array(8).keys())}
-			/>
+			<Game tetrisClass={module.Tetris} />
 		</div>
 	) : (
 		<StartScreen onClick={() => setIsPushedPlay(true)} />
