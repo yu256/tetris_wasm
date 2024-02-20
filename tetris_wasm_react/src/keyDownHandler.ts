@@ -9,7 +9,6 @@ export const keyDownHandler =
 			case "ArrowRight":
 				return exec(ExecType.MoveRight);
 			case "ArrowDown":
-				// todo 自由落下無限キャンセルが発生しないように長押しかどうかを判定する
 				return exec(ExecType.SoftDrop);
 			case "Space":
 				return exec(ExecType.HardDrop);

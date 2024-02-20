@@ -1,4 +1,4 @@
-import { MinoKind } from "./enums";
+import { MinoKind } from "../enums";
 
 const blockColor = (block: MinoKind) => {
 	switch (block) {

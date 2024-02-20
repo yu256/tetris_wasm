@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { keyDownHandler } from "./keyDownHandler";
-import type { Tetris } from "./tetris";
+import { keyDownHandler } from "../keyDownHandler";
+import type { Tetris } from "../tetris";
 import Field from "./Field";
-import { ExecType } from "./enums";
+import { ExecType } from "../enums";
 
 type Props = {
 	tetrisClass: new () => Tetris;
@@ -46,7 +46,7 @@ export default function Game({ tetrisClass }: Props) {
 
 	return (
 		<button
-			className="m-10 bg-gray-500 border-4 rounded border-black"
+			className="w-full focus:outline-none"
 			type="button"
 			// biome-ignore lint/a11y/noAutofocus:
 			autoFocus
@@ -62,26 +62,28 @@ export default function Game({ tetrisClass }: Props) {
 				setCurrentState(tetris.exec(ExecType.Init, undefined)!);
 			})}
 		>
-			<div className="font-mono text-orange-400">
-				{score} P L.{level} {erasedlineCount}-Lines
-			</div>
-			<div className="grid grid-cols-4 gap-2">
-				<Field
-					className="bg-white rounded w-max h-max m-2 col-span-3"
-					currentState={tetrisArr}
-				/>
-				<div className="grid grid-cols-1">
-					<div className="w-min h-min">
-						<div className="mb-2 text-white font-serif">Hold</div>
-						<Field currentState={hold} />
-					</div>
-					<div className="w-min h-min">
-						<div className="mb-2 text-white font-serif">Next</div>
-						<span className="grid gap-2">
-							{[0, 1, 2].map((i) => (
-								<Field key={i} currentState={nextBlocks.get_unchecked(i)} />
-							))}
-						</span>
+			<div className=" bg-gray-500 border-4 rounded border-black w-max mx-auto my-20">
+				<div className="font-mono text-orange-400">
+					{score} P L.{level} {erasedlineCount}-Lines
+				</div>
+				<div className="grid grid-cols-4 gap-1">
+					<Field
+						className="bg-white rounded w-max h-max m-2 col-span-3"
+						currentState={tetrisArr}
+					/>
+					<div className="grid grid-cols-1">
+						<div className="w-min h-min">
+							<div className="mb-2 text-white font-serif">Hold</div>
+							<Field currentState={hold} />
+						</div>
+						<div className="w-min h-min">
+							<div className="mb-2 text-white font-serif">Next</div>
+							<span className="grid gap-2">
+								{[0, 1, 2].map((i) => (
+									<Field key={i} currentState={nextBlocks.get_unchecked(i)} />
+								))}
+							</span>
+						</div>
 					</div>
 				</div>
 			</div>

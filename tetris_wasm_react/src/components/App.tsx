@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Game from "./Game";
-import Module, { type MainModule } from "./tetris";
+import Module, { type MainModule } from "../tetris";
 
 const StartScreen = ({ onClick }: React.ComponentProps<"button">) => (
 	<button type="button" onClick={onClick}>

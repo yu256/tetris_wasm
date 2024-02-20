@@ -14,13 +14,7 @@ interface NextBlocksPtr {
 
 export type Hold = MinoShape | undefined;
 
-export type TetrisData = [
-	TetrisArr,
-	Hold,
-	NextBlocksPtr,
-	number,
-	number,
-];
+export type TetrisData = [TetrisArr, Hold, NextBlocksPtr, number, number];
 
 type TetrisX = [
 	number,
