@@ -1,7 +1,6 @@
-#ifndef rand_hpp
-#define rand_hpp
+#pragma once
 
-#include "tetris.hpp"
+#include "tetris.cpp"
 #include <algorithm>
 #include <array>
 #include <queue>
@@ -53,5 +52,3 @@ inline void init_block_queue(std::queue<MinoShape> &queue) {
 }
 
 } // namespace rand_gen
-
-#endif

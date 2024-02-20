@@ -1,7 +1,6 @@
-#ifndef tetris_hpp
-#define tetris_hpp
+#pragma once
 
-#include "rand.hpp"
+#include "rand.cpp"
 #include <algorithm>
 #include <array>
 #include <expected>
@@ -385,5 +384,3 @@ class Tetris {
                           this->hold, this->score, this->erased_cnt};
     }
 };
-
-#endif

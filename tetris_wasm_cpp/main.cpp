@@ -1,4 +1,4 @@
-#include "tetris.hpp"
+#include "tetris.cpp"
 #include <emscripten/bind.h>
 
 // emcc main.cpp -std=c++23 --bind -o tetris.mjs -Oz -s ALLOW_MEMORY_GROWTH=1 --closure 1
