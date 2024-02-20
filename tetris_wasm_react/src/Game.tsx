@@ -46,7 +46,7 @@ export default function Game({ tetrisClass }: Props) {
 
 	return (
 		<button
-			className="m-10 bg-gray-500 border-4 rounded border-amber-300"
+			className="m-10 bg-gray-500 border-4 rounded border-black"
 			type="button"
 			// biome-ignore lint/a11y/noAutofocus:
 			autoFocus
@@ -62,8 +62,8 @@ export default function Game({ tetrisClass }: Props) {
 				setCurrentState(tetris.exec(ExecType.Init, undefined)!);
 			})}
 		>
-			<div>
-				スコア: {score} レベル: {level} 消したライン数: {erasedlineCount}
+			<div className="font-mono text-orange-400">
+				{score} P L.{level} {erasedlineCount}-Lines
 			</div>
 			<div className="grid grid-cols-4 gap-2">
 				<Field
@@ -72,16 +72,16 @@ export default function Game({ tetrisClass }: Props) {
 				/>
 				<div className="grid grid-cols-1">
 					<div className="w-min h-min">
-						<div className="m-2">Next</div>
+						<div className="mb-2 text-white font-serif">Hold</div>
+						<Field currentState={hold} />
+					</div>
+					<div className="w-min h-min">
+						<div className="mb-2 text-white font-serif">Next</div>
 						<span className="grid gap-2">
 							{[0, 1, 2].map((i) => (
 								<Field key={i} currentState={nextBlocks.get_unchecked(i)} />
 							))}
 						</span>
-					</div>
-					<div className="w-min h-min">
-						<div className="m-2">Hold</div>
-						<Field currentState={hold} />
 					</div>
 				</div>
 			</div>
