@@ -13,9 +13,7 @@ async fn main() -> io::Result<()> {
         .and_then(|arg| {
             arg.split('=').last().and_then(|arg| {
                 arg.parse::<usize>()
-                    .inspect_err(|e| {
-                        eprintln!("{e}は数値ではありません。{DEFAULT_PORT}ポートを使用します。")
-                    })
+                    .inspect_err(|e| eprintln!("{e}\n{DEFAULT_PORT}ポートを使用します。"))
                     .ok()
             })
         })
