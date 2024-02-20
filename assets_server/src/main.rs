@@ -2,6 +2,8 @@ use axum::Router;
 use std::{env, io};
 use tower_http::services::ServeDir;
 
+const DEFAULT_PORT: usize = 80;
+
 #[tokio::main]
 async fn main() -> io::Result<()> {
     let args = env::args().collect::<Vec<_>>();
@@ -9,11 +11,15 @@ async fn main() -> io::Result<()> {
         .iter()
         .find(|arg| arg.starts_with("--port="))
         .and_then(|arg| {
-            arg.split('=')
-                .last()
-                .and_then(|arg| arg.parse::<usize>().ok())
+            arg.split('=').last().and_then(|arg| {
+                arg.parse::<usize>()
+                    .inspect_err(|e| {
+                        eprintln!("{e}は数値ではありません。{DEFAULT_PORT}ポートを使用します。")
+                    })
+                    .ok()
+            })
         })
-        .unwrap_or(80);
+        .unwrap_or(DEFAULT_PORT);
 
     let binding = args.iter().find(|arg| arg.starts_with("--path="));
     let path = binding
