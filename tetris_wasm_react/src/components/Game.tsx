@@ -3,12 +3,16 @@ import { keyDownHandler } from "../keyDownHandler";
 import type { Tetris } from "../tetris";
 import Field from "./Field";
 import { ExecType } from "../enums";
+import Modal from "./Modal";
 
 type Props = {
 	tetrisClass: new () => Tetris;
+	returnToTitle: () => void;
 };
 
-export default function Game({ tetrisClass }: Props) {
+const GameOverModal = Modal("GameOver")(["リトライ (Rキー)", "タイトルに戻る"]);
+
+export default function Game({ tetrisClass, returnToTitle }: Props) {
 	const [tetris, setTetris] = useState(() => new tetrisClass());
 	const [
 		[tetrisArr, hold, nextBlocks, score, erasedlineCount],
@@ -23,6 +27,18 @@ export default function Game({ tetrisClass }: Props) {
 		const newState = tetris.exec(execType, Date.now());
 		if (newState) setCurrentState(newState);
 		else setIsGameOver(true);
+	};
+
+	const restart = () => {
+		if (!isGameOver) return;
+		const tetris = new tetrisClass();
+		setTetris((old) => {
+			if (!old.isDeleted()) old.delete(); // React.StrictMode下のDevModeではコンポーネントが意図的に二回呼び出されるので確認が必要
+			return tetris;
+		});
+		setIsGameOver(false);
+		// biome-ignore lint/style/noNonNullAssertion:
+		setCurrentState(tetris.exec(ExecType.Init, undefined)!);
 	};
 
 	const level = Math.floor(erasedlineCount / 10);
@@ -50,18 +66,9 @@ export default function Game({ tetrisClass }: Props) {
 			type="button"
 			// biome-ignore lint/a11y/noAutofocus:
 			autoFocus
-			onKeyDown={keyDownHandler(exec, () => {
-				if (!isGameOver) return;
-				const tetris = new tetrisClass();
-				setTetris((old) => {
-					if (!old.isDeleted()) old.delete(); // React.StrictMode下のDevModeではコンポーネントが意図的に二回呼び出されるので確認が必要
-					return tetris;
-				});
-				setIsGameOver(false);
-				// biome-ignore lint/style/noNonNullAssertion:
-				setCurrentState(tetris.exec(ExecType.Init, undefined)!);
-			})}
+			onKeyDown={keyDownHandler(exec, restart)}
 		>
+			<GameOverModal onClick={[restart, returnToTitle]} isOpen={isGameOver} />
 			<div className=" bg-gray-500 border-4 rounded border-black w-max mx-auto my-20">
 				<div className="font-mono text-orange-400">
 					{score} P L.{level} {erasedlineCount}-Lines

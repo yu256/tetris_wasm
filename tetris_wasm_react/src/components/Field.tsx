@@ -25,7 +25,7 @@ const blockColor = (block: MinoKind) => {
 	}
 };
 
-const defaultArr: number[][] = new Array(4)
+const defaultArr: ReadonlyArray<ReadonlyArray<number>> = new Array(4)
 	.fill(0)
 	.map(() => new Array(4).fill(0));
 
