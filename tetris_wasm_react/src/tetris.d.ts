@@ -5,16 +5,16 @@ export interface Tetris {
 }
 
 type MinoShapeX = [number, number, number, number];
-export type MinoShape = [MinoShapeX, MinoShapeX, MinoShapeX, MinoShapeX];
+type MinoShape = [MinoShapeX, MinoShapeX, MinoShapeX, MinoShapeX];
 
 interface NextBlocksPtr {
 	// get: (index: number) => MinoShape;
 	get_unchecked: (index: number) => MinoShape;
 }
 
-export type Hold = MinoShape | undefined;
+type Hold = MinoShape | undefined;
 
-export type TetrisData = [TetrisArr, Hold, NextBlocksPtr, number, number];
+type TetrisData = [TetrisArr, Hold, NextBlocksPtr, number, number];
 
 type TetrisX = [
 	number,

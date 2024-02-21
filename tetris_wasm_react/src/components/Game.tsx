@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { keyDownHandler } from "../keyDownHandler";
 import type { Tetris } from "../tetris";
-import Field from "./Field";
 import { ExecType } from "../enums";
 import Modal from "./Modal";
+import GameView from "./GameView";
 
 type Props = {
 	tetrisClass: new () => Tetris;
@@ -14,10 +14,7 @@ const GameOverModal = Modal("GameOver")(["リトライ (Rキー)", "タイトル
 
 export default function Game({ tetrisClass, returnToTitle }: Props) {
 	const [tetris, setTetris] = useState(() => new tetrisClass());
-	const [
-		[tetrisArr, hold, nextBlocks, score, erasedlineCount],
-		setCurrentState,
-	] = useState(
+	const [tetrisData, setCurrentState] = useState(
 		// biome-ignore lint/style/noNonNullAssertion: 初回の実行でundefinedが返ってくることはない(返ってくるのはゲームオーバー後)
 		() => tetris.exec(ExecType.Init, undefined)!,
 	);
@@ -41,7 +38,7 @@ export default function Game({ tetrisClass, returnToTitle }: Props) {
 		setCurrentState(tetris.exec(ExecType.Init, undefined)!);
 	};
 
-	const level = Math.floor(erasedlineCount / 10);
+	const level = Math.floor(tetrisData[4] / 10);
 
 	// execをdepsに入れてしまうと、execは関数オブジェクトなので毎回インスタンスが違うためにレンダリング毎実行されてしまう
 	// useMemoでキャッシュするという手もあるが、execが依存しているのはtetrisオブジェクト、tetrisオブジェクトが変わるのと同時にisGameOverがtrueからfalseに変わる
@@ -68,32 +65,9 @@ export default function Game({ tetrisClass, returnToTitle }: Props) {
 			autoFocus
 			onKeyDown={keyDownHandler(exec, restart)}
 		>
-			<GameOverModal onClick={[restart, returnToTitle]} isOpen={isGameOver} />
-			<div className=" bg-gray-500 border-4 rounded border-black w-max mx-auto my-20">
-				<div className="font-mono text-orange-400">
-					{score} P L.{level} {erasedlineCount}-Lines
-				</div>
-				<div className="grid grid-cols-4 gap-1">
-					<Field
-						className="bg-white rounded w-max h-max m-2 col-span-3"
-						currentState={tetrisArr}
-					/>
-					<div className="grid grid-cols-1">
-						<div className="w-min h-min">
-							<div className="mb-2 text-white font-serif">Hold</div>
-							<Field currentState={hold} />
-						</div>
-						<div className="w-min h-min">
-							<div className="mb-2 text-white font-serif">Next</div>
-							<span className="grid gap-2">
-								{[0, 1, 2].map((i) => (
-									<Field key={i} currentState={nextBlocks.get_unchecked(i)} />
-								))}
-							</span>
-						</div>
-					</div>
-				</div>
-			</div>
+			<GameView TetrisData={tetrisData} level={level}>
+				<GameOverModal onClick={[restart, returnToTitle]} isOpen={isGameOver} />
+			</GameView>
 		</button>
 	);
 }
