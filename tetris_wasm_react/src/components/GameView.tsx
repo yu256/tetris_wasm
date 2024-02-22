@@ -15,7 +15,7 @@ const View = ({
 }: Props) => (
 	<>
 		{children}
-		<div className=" bg-gray-500 border-4 rounded border-black w-max mx-auto my-20">
+		<div className=" bg-gray-500 border-4 rounded w-max mx-auto my-20">
 			<div className="font-mono text-orange-400">
 				{score} P L.{level ?? Math.floor(erasedlineCount / 10)}{" "}
 				{erasedlineCount}
