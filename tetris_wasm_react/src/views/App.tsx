@@ -1,12 +1,7 @@
 import { useReducer } from "react";
 import Game from "./Game";
 import Module, { type MainModule } from "../tetris";
-
-const StartScreen = ({ onClick }: React.ComponentProps<"button">) => (
-	<button type="button" onClick={onClick}>
-		Play
-	</button>
-);
+import StartScreen from "./StartScreen";
 
 let module: MainModule | undefined;
 
@@ -21,10 +16,8 @@ export default function App() {
 			.catch(console.error);
 
 	return isPushedPlay ? (
-		<div>
-			<Game tetrisClass={module.Tetris} returnToTitle={toggleIsPushedPlay} />
-		</div>
+		<Game tetrisClass={module.Tetris} returnToTitle={toggleIsPushedPlay} />
 	) : (
-		<StartScreen onClick={toggleIsPushedPlay} />
+		<StartScreen tetrisClass={module.Tetris} onClick={toggleIsPushedPlay} />
 	);
 }

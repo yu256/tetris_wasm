@@ -3,7 +3,7 @@ import type { Tetris } from "../tetris";
 import Field from "./Field";
 
 type Props = {
-	TetrisData: ReturnType<Tetris["exec"]>;
+	TetrisData: Readonly<NonNullable<ReturnType<Tetris["exec"]>>>;
 	level?: number;
 	children?: ReactNode;
 };

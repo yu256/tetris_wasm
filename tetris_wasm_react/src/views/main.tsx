@@ -1,10 +1,10 @@
 import { StrictMode, Suspense } from "react";
-import ReactDOM from "react-dom/client";
-import App from "./components/App.tsx";
+import App from "./App.tsx";
 import "./index.css";
+import { createRoot } from "react-dom/client";
 
 // biome-ignore lint/style/noNonNullAssertion: <explanation>
-ReactDOM.createRoot(document.getElementById("root")!).render(
+createRoot(document.getElementById("root")!).render(
 	<StrictMode>
 		<Suspense fallback="loading...">
 			<App />

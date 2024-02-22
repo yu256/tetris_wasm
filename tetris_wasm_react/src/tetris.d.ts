@@ -1,5 +1,5 @@
 export interface Tetris {
-	exec(execType: ExecType, time: number | undefined): TetrisData;
+	exec(execType: ExecType, time: number | undefined): TetrisData | undefined;
 	isDeleted: () => boolean;
 	delete(): void;
 }

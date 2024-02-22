@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { keyDownHandler } from "../keyDownHandler";
 import type { Tetris } from "../tetris";
 import { ExecType } from "../enums";
-import Modal from "./Modal";
-import GameView from "./GameView";
+import Modal from "../components/Modal";
+import GameView from "../components/GameView";
 
 type Props = {
 	tetrisClass: new () => Tetris;
