@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { keyDownHandler } from "../keyDownHandler";
 import type { Tetris } from "../tetris";
-import { ExecType } from "../enums";
+import { ExecType } from "../types/enums";
 import Modal from "../components/Modal";
 import GameView from "../components/GameView";
 

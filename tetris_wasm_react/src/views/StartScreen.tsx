@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import GameView from "../components/GameView";
 import type { MainModule } from "../tetris";
-import { ExecType } from "../enums";
+import { ExecType } from "../types/enums";
 import * as random from "../random";
 import repeatFn from "../repeat";
 

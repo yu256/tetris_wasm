@@ -1,4 +1,4 @@
-import { ExecType } from "./enums";
+import { ExecType } from "./types/enums";
 
 export const keyDownHandler =
 	<T>(exec: (t: ExecType) => void, restartHandler: () => void) =>
