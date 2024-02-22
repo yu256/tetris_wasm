@@ -1,5 +1,14 @@
+import type { ExecType } from "./types/enums";
+
 export interface Tetris {
-	exec(execType: ExecType, time: number | undefined): TetrisData | undefined;
+	exec<const T>(
+		execType: T,
+		time: number | undefined,
+	): T extends ExecType.Init
+		? TetrisData
+		: T extends ExecType
+		  ? TetrisData | undefined
+		  : never;
 	isDeleted: () => boolean;
 	delete(): void;
 }

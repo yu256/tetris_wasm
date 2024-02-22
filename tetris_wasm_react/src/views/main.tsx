@@ -3,8 +3,9 @@ import App from "./App.tsx";
 import "./index.css";
 import { createRoot } from "react-dom/client";
 
-// biome-ignore lint/style/noNonNullAssertion: <explanation>
-createRoot(document.getElementById("root")!).render(
+export const rootElem = document.getElementById("root") as HTMLElement;
+
+createRoot(rootElem).render(
 	<StrictMode>
 		<Suspense fallback="loading...">
 			<App />

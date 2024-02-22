@@ -1,4 +1,6 @@
 import Modal from "react-modal";
+import Button from "./Button";
+import { rootElem } from "../views/main";
 
 const customStyles = {
 	content: {
@@ -21,25 +23,15 @@ const CurriedModal =
 	(title: string) =>
 	(items: ReadonlyArray<string>) =>
 	({ onClick, isOpen }: Props) => (
-		<Modal
-			isOpen={isOpen}
-			style={customStyles}
-			// biome-ignore lint/style/noNonNullAssertion: <explanation>
-			appElement={document.getElementById("root")!}
-		>
+		<Modal isOpen={isOpen} style={customStyles} appElement={rootElem}>
 			<div className="text-center font-serif mb-4 text-red-500 text-2xl">
 				{title}
 			</div>
 			<div className="flex gap-2">
 				{items.map((item, index) => (
-					<button
-						key={item}
-						type="button"
-						onClick={onClick?.at(index)}
-						className="border-2 border-black p-1 rounded-lg hover:bg-yellow-100"
-					>
+					<Button key={item} onClick={onClick?.at(index)}>
 						{item}
-					</button>
+					</Button>
 				))}
 			</div>
 		</Modal>

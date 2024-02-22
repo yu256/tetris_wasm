@@ -3,13 +3,11 @@ export default function repeatFn(
 	times: number,
 	interval: number,
 ) {
-	if (!times) return;
+	if (times === 0) return;
 
 	let count = 0;
 	const intervalId = setInterval(() => {
-		if (count === times) clearInterval(intervalId);
-
+		if (++count === times) clearInterval(intervalId);
 		callback();
-		count++;
 	}, interval);
 }

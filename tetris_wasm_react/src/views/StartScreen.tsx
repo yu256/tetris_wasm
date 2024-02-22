@@ -4,6 +4,7 @@ import type { MainModule } from "../tetris";
 import { ExecType } from "../types/enums";
 import * as random from "../random";
 import repeatFn from "../repeat";
+import Button from "../components/Button";
 
 type Props = {
 	tetrisClass: MainModule["Tetris"];
@@ -11,9 +12,8 @@ type Props = {
 
 const Preview = ({ tetrisClass }: Props) => {
 	const [tetris, setTetris] = useState(() => new tetrisClass());
-	const [state, setState] = useState(
-		// biome-ignore lint/style/noNonNullAssertion: <explanation>
-		() => tetris.exec(ExecType.Init, undefined)!,
+	const [state, setState] = useState(() =>
+		tetris.exec(ExecType.Init, undefined),
 	);
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: tetrisClassは不変
@@ -28,25 +28,19 @@ const Preview = ({ tetrisClass }: Props) => {
 								if (!old.isDeleted()) old.delete();
 								return tetris;
 							});
-							// biome-ignore lint/style/noNonNullAssertion: <explanation>
-							return tetris.exec(ExecType.Init, undefined)!;
+							return tetris.exec(ExecType.Init, undefined);
 						})(),
 				),
 			1000,
 		);
+
 		const interval2 = setInterval(() => {
 			const type: ExecType = random.random(2, 9);
-			const repeat = (() => {
-				switch (type) {
-					case ExecType.SoftDrop:
-						return 1;
-					case ExecType.HardDrop:
-					case ExecType.Hold:
-						return random.chance(30) ? 1 : 0;
-					default:
-						return random.random(0, 3);
-				}
-			})();
+
+			const repeat =
+				type === ExecType.HardDrop || type === ExecType.Hold
+					? Number(random.chance(30))
+					: random.random(1, 4);
 
 			repeatFn(
 				() => {
@@ -54,9 +48,9 @@ const Preview = ({ tetrisClass }: Props) => {
 					if (state) setState(state);
 				},
 				repeat,
-				200,
+				150,
 			);
-		}, 1000);
+		}, 800);
 		return () => {
 			clearInterval(interval1);
 			clearInterval(interval2);
@@ -74,13 +68,7 @@ const StartScreen = ({
 			<span className="text-red-500">T</span>
 			<span className="text-orange-500">E</span>
 			<span className="text-yellow-500">T</span>
-			<button
-				type="button"
-				className="text-lg h-min font-semibold px-8 py-4 align-middle text-gray-800 border border-solid rounded-full bg-gradient-to-b from-white to-gray-400 shadow-xl hover:shadow-2xl hover:from-gray-400 hover:to-white hover:scale-95 duration-300 m-3 font-mono"
-				onClick={onClick}
-			>
-				Play
-			</button>
+			<Button onClick={onClick}>Play</Button>
 			<span className="text-green-500">R</span>
 			<span className="text-blue-500">I</span>
 			<span className="text-purple-500">S</span>

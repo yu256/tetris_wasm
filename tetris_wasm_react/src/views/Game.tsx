@@ -14,9 +14,8 @@ const GameOverModal = Modal("GameOver")(["リトライ (Rキー)", "タイトル
 
 export default function Game({ tetrisClass, returnToTitle }: Props) {
 	const [tetris, setTetris] = useState(() => new tetrisClass());
-	const [tetrisData, setCurrentState] = useState(
-		// biome-ignore lint/style/noNonNullAssertion: 初回の実行でundefinedが返ってくることはない(返ってくるのはゲームオーバー後)
-		() => tetris.exec(ExecType.Init, undefined)!,
+	const [tetrisData, setCurrentState] = useState(() =>
+		tetris.exec(ExecType.Init, undefined),
 	);
 	const [isGameOver, setIsGameOver] = useState(false);
 
@@ -34,8 +33,7 @@ export default function Game({ tetrisClass, returnToTitle }: Props) {
 			return tetris;
 		});
 		setIsGameOver(false);
-		// biome-ignore lint/style/noNonNullAssertion:
-		setCurrentState(tetris.exec(ExecType.Init, undefined)!);
+		setCurrentState(tetris.exec(ExecType.Init, undefined));
 	};
 
 	const level = Math.floor(tetrisData[4] / 10);
