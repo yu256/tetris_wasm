@@ -34,7 +34,7 @@ const View = ({
 					<div className="w-min h-min">
 						<div className="mb-2 text-white font-serif">Next</div>
 						<span className="grid gap-2">
-							{[0, 1, 2].map((i) => (
+							{([0, 1, 2] as const).map((i) => (
 								<Field key={i} currentState={nextBlocks.get_unchecked(i)} />
 							))}
 						</span>
