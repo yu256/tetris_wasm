@@ -18,44 +18,44 @@ const Preview = ({ tetrisClass }: Props) => {
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: tetrisClassは不変
 	useEffect(() => {
-		const interval1 = setInterval(
-			() =>
-				setState(
-					tetris.exec(ExecType.FreeFall, undefined) ??
-						(() => {
-							const tetris = new tetrisClass();
-							setTetris((old) => {
-								if (!old.isDeleted()) old.delete();
-								return tetris;
-							});
-							return tetris.exec(ExecType.Init, undefined);
-						})(),
-				),
-			1000,
-		);
+		const intervalIds = [
+			setInterval(
+				() =>
+					setState(
+						tetris.exec(ExecType.FreeFall, undefined) ??
+							(() => {
+								const tetris = new tetrisClass();
+								setTetris((old) => {
+									if (!old.isDeleted()) old.delete();
+									return tetris;
+								});
+								return tetris.exec(ExecType.Init, undefined);
+							})(),
+					),
+				1000,
+			),
+			setInterval(() => {
+				const type: ExecType = random.random(2, 9);
 
-		const interval2 = setInterval(() => {
-			const type: ExecType = random.random(2, 9);
+				const repeat =
+					type === ExecType.HardDrop || type === ExecType.Hold
+						? Number(random.chance(30))
+						: random.random(1, 4);
 
-			const repeat =
-				type === ExecType.HardDrop || type === ExecType.Hold
-					? Number(random.chance(30))
-					: random.random(1, 4);
+				repeatFn(
+					() => {
+						const state = !tetris.isDeleted() && tetris.exec(type, undefined);
+						if (state) setState(state);
+					},
+					repeat,
+					150,
+				);
+			}, 800),
+		];
 
-			repeatFn(
-				() => {
-					const state = !tetris.isDeleted() && tetris.exec(type, undefined);
-					if (state) setState(state);
-				},
-				repeat,
-				150,
-			);
-		}, 800);
-		return () => {
-			clearInterval(interval1);
-			clearInterval(interval2);
-		};
+		return () => intervalIds.forEach(clearInterval);
 	}, [tetris]);
+
 	return <GameView TetrisData={state} />;
 };
 

@@ -1,16 +1,16 @@
 import type { ExecType } from "./types/enums";
 
 export interface Tetris {
-	exec<const T>(
+	exec: <const T>(
 		execType: T,
 		time: number | undefined,
-	): T extends ExecType.Init
+	) => T extends ExecType.Init
 		? TetrisData
 		: T extends ExecType
 		  ? TetrisData | undefined
 		  : never;
 	isDeleted: () => boolean;
-	delete(): void;
+	delete: () => void;
 }
 
 type MinoShapeX = [number, number, number, number];
@@ -23,7 +23,7 @@ interface NextBlocksPtr {
 
 type Hold = MinoShape | undefined;
 
-type TetrisData = [TetrisArr, Hold, NextBlocksPtr, number, number];
+export type TetrisData = [TetrisArr, Hold, NextBlocksPtr, number, number];
 
 type TetrisX = [
 	number,

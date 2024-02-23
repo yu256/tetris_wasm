@@ -48,11 +48,9 @@ export default function Game({ tetrisClass, returnToTitle }: Props) {
 					() => exec(ExecType.FreeFall),
 					Math.max(150, 1000 - Math.log2(level + 1) ** 2 * 50),
 			  )
-			: null;
+			: undefined;
 
-		return () => {
-			if (intervalId) clearInterval(intervalId);
-		};
+		return () => clearInterval(intervalId);
 	}, [isGameOver, level]);
 
 	return (

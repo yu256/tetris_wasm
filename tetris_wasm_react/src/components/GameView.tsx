@@ -1,9 +1,9 @@
 import { ReactNode } from "react";
-import type { Tetris } from "../tetris";
+import type { TetrisData } from "../tetris";
 import Field from "./Field";
 
 type Props = {
-	TetrisData: Readonly<NonNullable<ReturnType<Tetris["exec"]>>>;
+	TetrisData: Readonly<TetrisData>;
 	level?: number;
 	children?: ReactNode;
 };
