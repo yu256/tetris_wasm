@@ -1,1 +1,2 @@
 src/tetris.mjs linguist-vendored
+*.config.js linguist-vendored
