@@ -5,6 +5,7 @@ import { ExecType } from "../types/enums";
 import * as random from "../random";
 import repeatFn from "../repeat";
 import Button from "../components/Button";
+import { isSmartPhone } from "../lazy_const";
 
 type Props = {
 	tetrisClass: MainModule["Tetris"];
@@ -63,8 +64,17 @@ const StartScreen = ({
 	onClick,
 	tetrisClass,
 }: React.ComponentProps<"button"> & Props) => (
-	<div className="bg-black rounded-3xl w-min mx-auto my-5 p-10 text-center flex">
-		<div className="font-bold text-7xl font-serif grid m-auto">
+	<div
+		className={`bg-black rounded-3xl w-min mx-auto my-5 text-center flex ${
+			isSmartPhone ? "flex-col p-2" : "flex-row-reverse p-10 gap-3"
+		}`}
+	>
+		<Preview tetrisClass={tetrisClass} />
+		<div
+			className={`font-bold font-serif m-auto ${
+				isSmartPhone ? "flex text-6xl" : "text-7xl grid"
+			}`}
+		>
 			<span className="text-red-500">T</span>
 			<span className="text-orange-500">E</span>
 			<span className="text-yellow-500">T</span>
@@ -73,7 +83,6 @@ const StartScreen = ({
 			<span className="text-blue-500">I</span>
 			<span className="text-purple-500">S</span>
 		</div>
-		<Preview tetrisClass={tetrisClass} />
 	</div>
 );
 

@@ -2,8 +2,7 @@ import { StrictMode, Suspense } from "react";
 import App from "./App.tsx";
 import "./index.css";
 import { createRoot } from "react-dom/client";
-
-export const rootElem = document.getElementById("root") as HTMLElement;
+import { rootElem } from "../lazy_const.ts";
 
 createRoot(rootElem).render(
 	<StrictMode>

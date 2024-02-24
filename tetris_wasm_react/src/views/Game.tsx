@@ -11,7 +11,7 @@ type Props = {
 	returnToTitle: () => void;
 };
 
-const GameOverModal = Modal("GameOver")(["リトライ (Rキー)", "タイトルに戻る"]);
+const GameOverModal = Modal("GameOver")(["リトライ(KeyR)", "タイトルに戻る"]);
 
 export default function Game({ tetrisClass, returnToTitle }: Props) {
 	const [tetris, setTetris] = useState(() => new tetrisClass());

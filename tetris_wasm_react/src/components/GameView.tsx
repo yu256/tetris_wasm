@@ -15,7 +15,7 @@ const View = ({
 }: Props) => (
 	<>
 		{children}
-		<div className=" bg-gray-500 border-4 rounded w-max mx-auto my-20">
+		<div className="bg-gray-500 border-4 rounded w-max mx-auto my-10">
 			<div className="font-mono grid grid-cols-3">
 				<span className="m-auto">Lines {erasedlineCount}</span>
 				<span className="font-bold text-3xl text-orange-300">{score}</span>

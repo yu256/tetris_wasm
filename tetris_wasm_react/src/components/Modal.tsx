@@ -1,6 +1,6 @@
 import Modal from "react-modal";
 import Button from "./Button";
-import { rootElem } from "../views/main";
+import { isSmartPhone, rootElem } from "../lazy_const";
 
 const customStyles = {
 	content: {
@@ -27,7 +27,7 @@ const CurriedModal =
 			<div className="text-center font-serif mb-4 text-red-500 text-2xl">
 				{title}
 			</div>
-			<div className="flex gap-2">
+			<div className={`flex gap-2 ${isSmartPhone ? "flex-col" : ""}`}>
 				{items.map((item, index) => (
 					<Button key={item} onClick={onClick?.at(index)}>
 						{item}
