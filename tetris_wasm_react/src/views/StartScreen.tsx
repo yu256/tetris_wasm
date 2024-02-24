@@ -39,7 +39,7 @@ const Preview = ({ tetrisClass }: Props) => {
 
 				const repeat =
 					type === ExecType.HardDrop || type === ExecType.Hold
-						? Number(random.chance(30))
+						? Number(random.chance(30)) // true -> 1 | false -> 0
 						: random.random(1, 4);
 
 				repeatFn(
