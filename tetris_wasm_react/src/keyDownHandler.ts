@@ -1,8 +1,8 @@
 import { ExecType } from "./types/enums";
 
 export const keyDownHandler =
-	<T>(exec: (t: ExecType) => void, restartHandler: () => void) =>
-	({ code }: React.KeyboardEvent<T>) => {
+	(exec: (t: ExecType) => void, restartHandler: () => void) =>
+	({ code }: Pick<React.KeyboardEvent, "code">) => {
 		switch (code) {
 			case "ArrowLeft":
 				return exec(ExecType.MoveLeft);

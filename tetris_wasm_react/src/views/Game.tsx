@@ -4,6 +4,7 @@ import type { Tetris } from "../tetris";
 import { ExecType } from "../types/enums";
 import Modal from "../components/Modal";
 import GameView from "../components/GameView";
+import TouchController from "../components/TouchController";
 
 type Props = {
 	tetrisClass: new () => Tetris;
@@ -54,16 +55,22 @@ export default function Game({ tetrisClass, returnToTitle }: Props) {
 	}, [isGameOver, level]);
 
 	return (
-		<button
-			className="w-full focus:outline-none"
-			type="button"
-			// biome-ignore lint/a11y/noAutofocus:
-			autoFocus
-			onKeyDown={keyDownHandler(exec, restart)}
-		>
-			<GameView TetrisData={tetrisData} level={level}>
-				<GameOverModal onClick={[restart, returnToTitle]} isOpen={isGameOver} />
-			</GameView>
-		</button>
+		<>
+			<TouchController exec={exec} />
+			<button
+				className="w-full focus:outline-none"
+				type="button"
+				// biome-ignore lint/a11y/noAutofocus:
+				autoFocus
+				onKeyDown={keyDownHandler(exec, restart)}
+			>
+				<GameView TetrisData={tetrisData} level={level}>
+					<GameOverModal
+						onClick={[restart, returnToTitle]}
+						isOpen={isGameOver}
+					/>
+				</GameView>
+			</button>
+		</>
 	);
 }
