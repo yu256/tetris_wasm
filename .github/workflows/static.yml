@@ -19,9 +19,6 @@ jobs:
       - name: Install pnpm
         run: npm install --global pnpm@8.15.3
 
-      - name: Move dir
-        run: cd tetris_wasm_react
-
       - name: Cache .pnpm-store
         uses: actions/cache@v3
         with:
@@ -31,10 +28,14 @@ jobs:
             ${{ runner.os }}-pnpm-
 
       - name: Install dependencies
-        run: pnpm install
+        run: |
+          cd tetris_wasm_react
+          pnpm install
 
       - name: Build
-        run: pnpm build
+        run: |
+          cd tetris_wasm_react
+          pnpm build
 
       - name: Deploy GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
