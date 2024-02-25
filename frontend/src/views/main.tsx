@@ -5,15 +5,18 @@ import { createRoot } from "react-dom/client";
 import { global, rootElem } from "../var.ts";
 
 document.body.addEventListener(
-	"touchmove",
-	(e) => {
+	"touchstart",
+	() => {
 		global.isTouchDevice ??= true;
-		if (e.touches.length > 1) {
-			e.preventDefault();
-		}
 	},
-	{ passive: false },
+	{ once: true },
 );
+
+document.body.addEventListener("touchmove", (e) => {
+	if (e.touches.length > 1) {
+		e.preventDefault();
+	}
+});
 
 createRoot(rootElem).render(
 	<StrictMode>
