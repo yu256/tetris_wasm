@@ -1,6 +1,6 @@
 import Modal from "react-modal";
 import Button from "./Button";
-import { isSmartPhone, rootElem } from "../lazy_const";
+import { isSmartPhone, rootElem } from "../var";
 
 const customStyles = {
 	content: {

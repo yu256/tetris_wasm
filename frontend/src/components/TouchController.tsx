@@ -1,4 +1,4 @@
-import { isSmartPhone } from "../lazy_const";
+import { global } from "../var";
 import { ExecType } from "../types/enums";
 
 const Button = ({ onClick, children }: React.ComponentProps<"button">) => (
@@ -16,7 +16,7 @@ type Props = {
 };
 
 const TouchController = ({ exec }: Props) =>
-	isSmartPhone && (
+	(global.isTouchDevice ?? global.isSmartPhone) && (
 		<div className="fixed bottom-0 left-0 w-full flex justify-center items-center p-4">
 			<div className="grid grid-cols-3 gap-4">
 				<div className="flex justify-center">

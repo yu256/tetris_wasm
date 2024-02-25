@@ -2,11 +2,12 @@ import { StrictMode, Suspense } from "react";
 import App from "./App.tsx";
 import "./index.css";
 import { createRoot } from "react-dom/client";
-import { rootElem } from "../lazy_const.ts";
+import { global, rootElem } from "../var.ts";
 
 document.body.addEventListener(
 	"touchmove",
 	(e) => {
+		global.isTouchDevice ??= true;
 		if (e.touches.length > 1) {
 			e.preventDefault();
 		}

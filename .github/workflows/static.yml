@@ -29,16 +29,16 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd tetris_wasm_react
+          cd frontend
           pnpm install
 
       - name: Build
         run: |
-          cd tetris_wasm_react
+          cd frontend
           pnpm build
 
       - name: Deploy GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: tetris_wasm_react/dist
+          publish_dir: frontend/dist
