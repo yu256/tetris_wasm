@@ -6,7 +6,6 @@ import StartScreen from "./StartScreen";
 let module: MainModule | undefined;
 
 export default function App() {
-	const [isPushedPlay, toggleIsPushedPlay] = useReducer((is) => !is, false);
 	if (!module)
 		// Promiseをthrowし、React SuspenseにPromise解決の間フォールバックさせる
 		throw Module()
@@ -14,6 +13,8 @@ export default function App() {
 				module = m;
 			})
 			.catch(console.error);
+
+	const [isPushedPlay, toggleIsPushedPlay] = useReducer((is) => !is, false);
 
 	return isPushedPlay ? (
 		<Game tetrisClass={module.Tetris} returnToTitle={toggleIsPushedPlay} />

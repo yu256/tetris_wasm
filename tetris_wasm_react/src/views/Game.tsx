@@ -11,7 +11,7 @@ type Props = {
 	returnToTitle: () => void;
 };
 
-const GameOverModal = Modal("GameOver")(["リトライ(KeyR)", "タイトルに戻る"]);
+const GameOverModal = Modal("GameOver")(["リスタート", "タイトルに戻る"]);
 
 export default function Game({ tetrisClass, returnToTitle }: Props) {
 	const [tetris, setTetris] = useState(() => new tetrisClass());
@@ -56,13 +56,12 @@ export default function Game({ tetrisClass, returnToTitle }: Props) {
 
 	return (
 		<>
-			<TouchController exec={exec} />
 			<button
 				className="w-full focus:outline-none"
 				type="button"
 				// biome-ignore lint/a11y/noAutofocus:
 				autoFocus
-				onKeyDown={keyDownHandler(exec, restart)}
+				onKeyDown={keyDownHandler(exec)}
 			>
 				<GameView TetrisData={tetrisData} level={level}>
 					<GameOverModal
@@ -71,6 +70,7 @@ export default function Game({ tetrisClass, returnToTitle }: Props) {
 					/>
 				</GameView>
 			</button>
+			<TouchController exec={exec} />
 		</>
 	);
 }
