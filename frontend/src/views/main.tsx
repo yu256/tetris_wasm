@@ -12,11 +12,15 @@ document.body.addEventListener(
 	{ once: true },
 );
 
-document.body.addEventListener("touchmove", (e) => {
-	if (e.touches.length > 1) {
-		e.preventDefault();
-	}
-});
+document.body.addEventListener(
+	"touchmove",
+	(e) => {
+		if (e.touches.length > 1) {
+			e.preventDefault();
+		}
+	},
+	{ passive: false },
+);
 
 createRoot(rootElem).render(
 	<StrictMode>
