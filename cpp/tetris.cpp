@@ -95,7 +95,7 @@ class Tetris {
   private:
     // ↓ static function
 
-    static inline bool is_err(const Result result) { return !result; }
+    static inline bool is_err(const Result result) { return not result; }
 
     static int to_score(const int line_cnt) {
         switch (line_cnt) {
@@ -117,7 +117,7 @@ class Tetris {
                             const bool is_view = false) {
         auto ghost_pos_y = pos.y;
 
-        while (!Tetris::is_collision(field, {pos.x, ghost_pos_y + 1}, block)) {
+        while (not Tetris::is_collision(field, {pos.x, ghost_pos_y + 1}, block)) {
             ghost_pos_y += 1;
         };
 
@@ -177,7 +177,7 @@ class Tetris {
     }
 
     Result move(const Position &new_pos) {
-        if (!this->is_collision(new_pos)) {
+        if (not this->is_collision(new_pos)) {
             this->pos = new_pos;
             return Result::Ok;
         }
@@ -194,7 +194,7 @@ class Tetris {
         this->block = next_blocks->front();
         this->next_blocks->pop_front();
         this->advance_block_queue();
-        return static_cast<Result>(!this->is_collision(new_pos));
+        return static_cast<Result>(not this->is_collision(new_pos));
     }
 
     void erase_line() {
@@ -203,7 +203,7 @@ class Tetris {
 
         for (const auto y : std::views::iota(1, FIELD_HEIGHT - 2)) {
             for (const auto x : std::views::iota(1, FIELD_WIDTH - 2)) {
-                if (!field[y][x])
+                if (not field[y][x])
                     goto CONTINUE_OUTER;
             }
 
@@ -235,9 +235,9 @@ class Tetris {
             }
         }
 
-        if (!this->is_collision(new_shape)) {
+        if (not this->is_collision(new_shape)) {
             this->block = new_shape;
-        } else if (!this->canceled) { // スーパーローテーションを試みる
+        } else if (not this->canceled) { // スーパーローテーションを試みる
             const auto super_rotate = [&](const int diff) {
                 const std::array<Position, 4> super_rotation_pos = {
                     {{pos.x, pos.y + diff},
@@ -246,7 +246,7 @@ class Tetris {
                      {pos.x - diff, pos.y}}};
 
                 for (const auto &pos_ : super_rotation_pos) {
-                    if (!this->is_collision(this->field, pos_, new_shape)) {
+                    if (not this->is_collision(this->field, pos_, new_shape)) {
                         this->pos = pos_;
                         this->block = new_shape;
                         return Ok;
@@ -341,7 +341,7 @@ class Tetris {
         case SoftDrop:
         case FreeFall: {
             const auto result = this->drop(is_moving);
-            if (!result.has_value())
+            if (not result.has_value())
                 return ReturnType{result.error()->get_current_state(),
                                   this->next_blocks, this->hold, this->score,
                                   this->erased_cnt};
@@ -367,7 +367,7 @@ class Tetris {
         case HardDrop:
             for (;;) {
                 const auto result = this->drop();
-                if (!result.has_value())
+                if (not result.has_value())
                     return ReturnType{result.error()->get_current_state(),
                                       this->next_blocks, this->hold,
                                       this->score, this->erased_cnt};

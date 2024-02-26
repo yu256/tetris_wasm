@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@preact/compat": "^17.1.2",
-    "@types/react-modal": "^3.16.3",
     "preact": "^10.19.6",
     "react-modal": "^3.16.1"
   },
@@ -21,6 +20,7 @@
     "@preact/preset-vite": "^2.8.1",
     "@types/react": "^18.2.58",
     "@types/react-dom": "^18.2.19",
+    "@types/react-modal": "^3.16.3",
     "@vitejs/plugin-react-swc": "^3.6.0",
     "autoprefixer": "^10.4.17",
     "postcss": "^8.4.35",
