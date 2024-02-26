@@ -1,11 +1,12 @@
 import { defineConfig } from "vite";
 import { preact } from "@preact/preset-vite";
+import react from "@vitejs/plugin-react-swc";
 import { VitePWA } from "vite-plugin-pwa";
 
 // https://vitejs.dev/config/
 export default defineConfig({
 	plugins: [
-		preact(),
+		process.env.NODE_ENV === "development" ? react() : preact(),
 		VitePWA({
 			registerType: "autoUpdate",
 			includeAssets: ["favicon.ico", "apple-touch-icon.png"],
@@ -14,7 +15,7 @@ export default defineConfig({
 				name: "tetris_wasm",
 				short_name: "tetris",
 				description: "Tetris written in C++ and React",
-				theme_color: "#ffffff",
+				theme_color: "#6B7280",
 				icons: [
 					{
 						src: "192x192.png",
