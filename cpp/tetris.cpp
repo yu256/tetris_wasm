@@ -268,28 +268,28 @@ class Tetris {
 
     std::expected<Result, std::unique_ptr<Tetris>>
     drop(const bool is_moving = false) {
-        if (is_err(this->move(this->new_pos(0, 1)))) {
-            if (is_moving) {
-                this->canceled = true;
-                return Ok;
-            }
+        if (this->move(this->new_pos(0, 1)) == Ok)
+            return Ok;
 
-            auto backup = std::make_unique<Tetris>(*this);
-
-            this->lock_block();
-            this->erase_line();
-
-            this->is_holded = false;
-            this->canceled = false;
-
-            if (is_err(this->spawn_block())) {
-                this->is_finished = true;
-                return std::unexpected(std::move(backup));
-            }
-
-            return Err;
+        if (is_moving) {
+            this->canceled = true;
+            return Ok;
         }
-        return Ok;
+
+        auto backup = std::make_unique<Tetris>(*this);
+
+        this->lock_block();
+        this->erase_line();
+
+        this->is_holded = false;
+        this->canceled = false;
+
+        if (is_err(this->spawn_block())) {
+            this->is_finished = true;
+            return std::unexpected(std::move(backup));
+        }
+
+        return Err;
     }
 
     void hold_mino() {

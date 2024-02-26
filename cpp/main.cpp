@@ -23,7 +23,7 @@ using std::deque;
 
 struct SharedPtrAccess {
     static deque<MinoShape>::value_type
-    get_unchecked(const std::shared_ptr<std::deque<MinoShape>> &ptr,
+    get_unchecked(const std::shared_ptr<deque<MinoShape>> &ptr,
                   const deque<MinoShape>::size_type index) {
         return ptr->at(index);
     }
@@ -80,7 +80,7 @@ EMSCRIPTEN_BINDINGS(tetris) {
     //     .function("get", &DequeAccess::get)
     //     .function("get_unchecked", &DequeAccess::get_unchecked);
 
-    emscripten::class_<std::shared_ptr<std::deque<MinoShape>>>("NextBlocksPtr")
+    emscripten::class_<std::shared_ptr<deque<MinoShape>>>("NextBlocksPtr")
         .function("get_unchecked", &SharedPtrAccess::get_unchecked);
 
     emscripten::value_array<std::array<int, 4>>("MinoShape_X")

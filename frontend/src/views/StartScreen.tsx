@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import GameView from "../components/GameView";
-import type { MainModule } from "../tetris";
+import type { Tetris } from "../tetris";
 import { ExecType } from "../types/enums";
 import * as random from "../random";
 import repeatFn from "../repeat";
@@ -8,7 +8,7 @@ import Button from "../components/Button";
 import { global } from "../var";
 
 type Props = {
-	tetrisClass: MainModule["Tetris"];
+	tetrisClass: new () => Tetris;
 };
 
 const Preview = ({ tetrisClass }: Props) => {
